@@ -13,9 +13,25 @@
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
-            if (disposing && (components != null))
+            if (disposing)
             {
-                components.Dispose();
+                if (components != null)
+                {
+                    components.Dispose();
+                    components = null;
+                }
+
+                if (idleTimer != null)
+                {
+                    idleTimer.Tick -= OnIdleTimerTick;
+                    idleTimer.Dispose();
+                    idleTimer = null;
+                }
+
+                if (inputMonitor != null)
+                {
+                    inputMonitor.InputChanged -= OnInputChanged;
+                }
             }
             base.Dispose(disposing);
         }
@@ -36,11 +52,15 @@
             // 
             // TxtLog
             // 
+            this.TxtLog.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.TxtLog.Location = new System.Drawing.Point(12, 12);
             this.TxtLog.Multiline = true;
             this.TxtLog.Name = "TxtLog";
+            this.TxtLog.ReadOnly = true;
+            this.TxtLog.ScrollBars = System.Windows.Forms.ScrollBars.Both;
             this.TxtLog.Size = new System.Drawing.Size(513, 341);
             this.TxtLog.TabIndex = 0;
+            this.TxtLog.WordWrap = false;
             // 
             // BtnStart
             // 
