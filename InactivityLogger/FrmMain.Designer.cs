@@ -51,6 +51,7 @@
             this.NumUpDownIdlePeriod = new System.Windows.Forms.NumericUpDown();
             this.LblIdlePeriod = new System.Windows.Forms.Label();
             this.LblIdleMinutes = new System.Windows.Forms.Label();
+            this.BtnSaveLog = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.NumUpDownIdlePeriod)).BeginInit();
             this.SuspendLayout();
             // 
@@ -131,11 +132,22 @@
             this.LblIdleMinutes.TabIndex = 6;
             this.LblIdleMinutes.Text = "Minutes";
             // 
+            // BtnSaveLog
+            // 
+            this.BtnSaveLog.Location = new System.Drawing.Point(450, 388);
+            this.BtnSaveLog.Name = "BtnSaveLog";
+            this.BtnSaveLog.Size = new System.Drawing.Size(75, 23);
+            this.BtnSaveLog.TabIndex = 7;
+            this.BtnSaveLog.Text = "Save Log";
+            this.BtnSaveLog.UseVisualStyleBackColor = true;
+            this.BtnSaveLog.Click += new System.EventHandler(this.BtnSaveLog_Click);
+            // 
             // FrmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(537, 428);
+            this.ClientSize = new System.Drawing.Size(537, 419);
+            this.Controls.Add(this.BtnSaveLog);
             this.Controls.Add(this.LblIdleMinutes);
             this.Controls.Add(this.LblIdlePeriod);
             this.Controls.Add(this.NumUpDownIdlePeriod);
@@ -144,7 +156,7 @@
             this.Controls.Add(this.BtnStart);
             this.Controls.Add(this.TxtLog);
             this.MaximizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(553, 467);
+            this.MinimumSize = new System.Drawing.Size(553, 458);
             this.Name = "FrmMain";
             this.Text = "Inactivity Logger";
             this.Load += new System.EventHandler(this.FrmMain_Load);
@@ -164,6 +176,7 @@
         private System.Windows.Forms.NumericUpDown NumUpDownIdlePeriod;
         private System.Windows.Forms.Label LblIdlePeriod;
         private System.Windows.Forms.Label LblIdleMinutes;
+        private System.Windows.Forms.Button BtnSaveLog;
     }
 }
 

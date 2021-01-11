@@ -1,7 +1,8 @@
 ﻿using System;
-using System.Globalization;
-using System.Windows.Forms;
 using System.Drawing;
+using System.Globalization;
+using System.IO;
+using System.Windows.Forms;
 
 namespace InactivityLogger
 {
@@ -83,6 +84,9 @@ namespace InactivityLogger
             idleTimer.Tick += OnIdleTimerTick;
 
             prevFrmMainSize = this.Size;
+
+            // Disable the save log button because the log is empty.
+            EnableBtnSaveLog(false);
         }
 
         // Adds a message to the log textbox.
@@ -152,6 +156,20 @@ namespace InactivityLogger
             idleTimer.Start();
         }
 
+        // Enables or disables the save log button, and adds or removes the TextChanged event handler on TxtLog.
+        private void EnableBtnSaveLog(bool enabled)
+        {
+            BtnSaveLog.Enabled = enabled;
+            if (enabled)
+            {
+                TxtLog.TextChanged -= TxtLog_TextChanged;
+            }
+            else
+            {
+                TxtLog.TextChanged += TxtLog_TextChanged;
+            }
+        }
+
         // Event handler for when input changed.
         private void OnInputChanged(object sender, EventType type)
         {
@@ -202,6 +220,9 @@ namespace InactivityLogger
         private void BtnClear_Click(object sender, EventArgs e)
         {
             TxtLog.Clear();
+
+            // The log is empty, so it can't be saved.
+            EnableBtnSaveLog(false);
         }
 
         private void NumUpDownIdlePeriod_ValueChanged(object sender, EventArgs e)
@@ -217,13 +238,17 @@ namespace InactivityLogger
             int widthDiff = this.Size.Width - prevFrmMainSize.Width;
             int heightDiff = this.Size.Height - prevFrmMainSize.Height;
 
+            SuspendLayout();
+
             // TxtLog should resize with the right and bottom edges.
             TxtLog.Width += widthDiff;
             TxtLog.Height += heightDiff;
 
-            // BtnClear should follow the right and bottom edges.
+            // BtnClear and BtnSaveLog should follow the right and bottom edges.
             BtnClear.Left += widthDiff;
             BtnClear.Top += heightDiff;
+            BtnSaveLog.Left += widthDiff;
+            BtnSaveLog.Top += heightDiff;
 
             // The rest of the controls should follow the bottom edge.
             BtnStart.Top += heightDiff;
@@ -232,7 +257,42 @@ namespace InactivityLogger
             NumUpDownIdlePeriod.Top += heightDiff;
             LblIdleMinutes.Top += heightDiff;
 
+            ResumeLayout();
+
             prevFrmMainSize = this.Size;
+        }
+
+        private void BtnSaveLog_Click(object sender, EventArgs e)
+        {
+            string filename = DateTime.Now.ToString("F", englishUSCultureInfo).Replace(':', '-') + ".log";
+            var saveLogFileDialog = new SaveFileDialog
+            {
+                AddExtension = false,
+                DefaultExt = "log",
+                FileName = filename,
+                Filter = "Log files|*.log|Text Files|*.txt|All files|*"
+            };
+
+            if (saveLogFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                try
+                {
+                    using (var writer = new StreamWriter(saveLogFileDialog.OpenFile()) )
+                    {
+                        writer.Write(TxtLog.Text);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("An error occured: " + ex.Message);
+                }
+            }
+        }
+
+        private void TxtLog_TextChanged(object sender, EventArgs e)
+        {
+            // The log isn't empty, so it can be saved.
+            EnableBtnSaveLog(true);
         }
     }
 }
