@@ -68,6 +68,9 @@ namespace InactivityLogger
         // The previous size of FrmMain before resizing.
         private Size prevFrmMainSize;
 
+        // The time the user began to idle.
+        private DateTime idleStartTime;
+
         public FrmMain(InputMonitor inputMonitor)
         {
             InitializeComponent();
@@ -95,6 +98,7 @@ namespace InactivityLogger
         private void AddToTxtLog(EventType type)
         {
             string typeName = "";
+            string extraData = "";
             switch (type)
             {
                 case EventType.Started:
@@ -144,20 +148,76 @@ namespace InactivityLogger
                 }
             }
 
+            if (isIdle && type != EventType.WentIdle)
+            {
+                // Add how long they have been idle for.
+                TimeSpan timeDiff = DateTime.Now.Subtract(idleStartTime);
+                extraData += " (Idle for " + GetTimeSpanString(timeDiff) + ")";
+            }
+
             if (typeName != "")
             {
                 DateTime now = DateTime.Now;
                 string dateText = now.ToString("MMM dd, yyyy ", englishUSCultureInfo) +
                     now.ToString("T", englishUSCultureInfo);
-                TxtLog.AppendText(String.Format("[ {0} ]  {1}\r\n", dateText, typeName));
+                string message = (extraData != "" ? (typeName + " " + extraData) : typeName);
+                TxtLog.AppendText(String.Format("[ {0} ]  {1}\r\n", dateText, message));
             }
         }
 
-        // Resets the idle timer.
+        // Resets the idle timer and resets idleStartTime.
         private void ResetIdleTimer()
         {
             idleTimer.Stop();
             idleTimer.Start();
+            idleStartTime = DateTime.Now;
+        }
+
+        // Returns a string of the amount of time given from a TimeSpan object.
+        private string GetTimeSpanString(TimeSpan timeDiff)
+        {
+            string timeFormat = "";
+            object[] formatArgs;
+            if (timeDiff.Days > 0)
+            {
+                timeFormat = "{0} days, {1} hours, {2} minutes, {3} seconds";
+                formatArgs = new object[]
+                {
+                    timeDiff.Days,
+                    timeDiff.Hours,
+                    timeDiff.Minutes,
+                    timeDiff.Seconds
+                };
+            }
+            else if (timeDiff.Hours > 0)
+            {
+                timeFormat = "{0} hours, {1} minutes, {2} seconds";
+                formatArgs = new object[]
+                {
+                    timeDiff.Hours,
+                    timeDiff.Minutes,
+                    timeDiff.Seconds
+                };
+            }
+            else if (timeDiff.Minutes > 0)
+            {
+                timeFormat = "{0} minutes, {1} seconds";
+                formatArgs = new object[]
+                {
+                    timeDiff.Minutes,
+                    timeDiff.Seconds
+                };
+            }
+            else
+            {
+                timeFormat = "{0} seconds";
+                formatArgs = new object[]
+                {
+                    timeDiff.Seconds
+                };
+            }
+
+            return String.Format(timeFormat, formatArgs);
         }
 
         // Enables or disables the save log button, and adds or removes the TextChanged event handler on TxtLog.
