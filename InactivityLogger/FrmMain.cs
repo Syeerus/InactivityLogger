@@ -57,7 +57,7 @@ namespace InactivityLogger
             // Disable the save log button because the log is empty.
             EnableBtnSaveLog(false);
 
-            TxtLog.Font = new Font(FontManager.Get("OpenSans-Regular"), 10.3f, FontStyle.Regular);
+            TxtLog.Font = new Font(FontManager.Get("OpenSans-Regular"), 10.0f, FontStyle.Regular);
 
             doNotAddToLog = true;
             NumUpDownIdlePeriod.Value = DefaultIdleTimerIntervalInMinutes;
