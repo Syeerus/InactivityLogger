@@ -115,7 +115,7 @@ namespace InactivityLogger
                     typeName = "Keyboard.KeyDown";
                     break;
                 }
-                case EventType.IdlePeriodSet:
+                case EventType.IdlePeriodChanged:
                 {
                     typeName = "Config.Changed";
                     extraData = String.Format("- Idle period changed to {0} minutes.", NumUpDownIdlePeriod.Value);
@@ -286,7 +286,7 @@ namespace InactivityLogger
 
             if (!doNotAddToLog)
             {
-                AddToTxtLog(EventType.IdlePeriodSet);
+                AddToTxtLog(EventType.IdlePeriodChanged);
             }
             else
             {
