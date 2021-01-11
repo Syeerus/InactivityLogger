@@ -76,7 +76,7 @@ namespace InactivityLogger
         
         private void FrmMain_Load(object sender, EventArgs e)
         {
-            this.Text += " v" + Program.VersionDisplay;
+            this.Text = Program.Name + " v" + Program.VersionDisplay;
             BtnStart.Enabled = true;
             BtnStop.Enabled = false;
 
@@ -87,6 +87,8 @@ namespace InactivityLogger
 
             // Disable the save log button because the log is empty.
             EnableBtnSaveLog(false);
+
+            TxtLog.Font = new Font(FontManager.Get("OpenSans-Regular"), 10.3f, FontStyle.Regular);
         }
 
         // Adds a message to the log textbox.
@@ -144,8 +146,10 @@ namespace InactivityLogger
 
             if (typeName != "")
             {
-                string date = DateTime.Now.ToString(englishUSCultureInfo);
-                TxtLog.AppendText(String.Format("[ {0} ]  {1}\r\n", date, typeName));
+                DateTime now = DateTime.Now;
+                string dateText = now.ToString("MMM dd, yyyy ", englishUSCultureInfo) +
+                    now.ToString("T", englishUSCultureInfo);
+                TxtLog.AppendText(String.Format("[ {0} ]  {1}\r\n", dateText, typeName));
             }
         }
 

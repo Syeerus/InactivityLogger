@@ -5,6 +5,8 @@ namespace InactivityLogger
 {
     static class Program
     {
+        public static readonly string Name = Application.ProductName;
+
         // The version of the application.
         public static readonly Version Version = typeof(Program).Assembly.GetName().Version;
 
@@ -22,6 +24,8 @@ namespace InactivityLogger
             {
                 Application.Run(new FrmMain(inputMonitor));
             }
+
+            FontManager.CleanUp();
         }
     }
 }
