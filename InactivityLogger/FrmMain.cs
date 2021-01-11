@@ -7,19 +7,19 @@ namespace InactivityLogger
     public partial class FrmMain : Form
     {
         // Default number of minutes for the idle timer interval.
-        public const double DefaultIdleTimerIntervalInMinutes = 0.5;
+        public const decimal DefaultIdleTimerIntervalInMinutes = 0.5M;
 
         // Number of milliseconds that equals to a minute.
         private const int oneMinuteInMilliseconds = 60000;
 
         // Minimum allowed interval for the idle timer.
-        private const int minIdleTimerInterval = 1000;
+        private const int minIdleTimerInterval = 6000;
 
         // Enligsh US formatting.
         private static readonly CultureInfo englishUSCultureInfo = new CultureInfo("en-US");
 
         // Gets or sets the idle timer interval in minutes.
-        public double IdleTimerIntervalInMinutes
+        public decimal IdleTimerIntervalInMinutes
         {
             get
             {
@@ -33,7 +33,7 @@ namespace InactivityLogger
                 {
                     // User supplied value is too low.
                     milliseconds = minIdleTimerInterval;
-                    idleTimerIntervalInMinutes = (double)milliseconds / oneMinuteInMilliseconds;
+                    idleTimerIntervalInMinutes = (decimal)milliseconds / oneMinuteInMilliseconds;
                 }
                 else
                 {
@@ -46,11 +46,13 @@ namespace InactivityLogger
                     // Reset if enabled.
                     ResetIdleTimer();
                 }
+
+                NumUpDownIdlePeriod.Value = idleTimerIntervalInMinutes;
             }
         }
 
         // The display value for the idle timer interval.
-        private double idleTimerIntervalInMinutes = 0.0;
+        private decimal idleTimerIntervalInMinutes = 0.0M;
 
         // Timer used for determining idleness.
         private Timer idleTimer = new Timer();
@@ -63,9 +65,6 @@ namespace InactivityLogger
 
         public FrmMain(InputMonitor inputMonitor)
         {
-            IdleTimerIntervalInMinutes = DefaultIdleTimerIntervalInMinutes;
-            idleTimer.Tick += OnIdleTimerTick;
-
             InitializeComponent();
             this.inputMonitor = inputMonitor;
         }
@@ -75,6 +74,9 @@ namespace InactivityLogger
             this.Text += " v" + Program.VersionDisplay;
             BtnStart.Enabled = true;
             BtnStop.Enabled = false;
+
+            IdleTimerIntervalInMinutes = DefaultIdleTimerIntervalInMinutes;
+            idleTimer.Tick += OnIdleTimerTick;
         }
 
         // Adds a message to the log textbox.
@@ -194,6 +196,14 @@ namespace InactivityLogger
         private void BtnClear_Click(object sender, EventArgs e)
         {
             TxtLog.Clear();
+        }
+
+        private void NumUpDownIdlePeriod_ValueChanged(object sender, EventArgs e)
+        {
+            if (NumUpDownIdlePeriod.Value != IdleTimerIntervalInMinutes)
+            {
+                IdleTimerIntervalInMinutes = NumUpDownIdlePeriod.Value;
+            }
         }
     }
 }

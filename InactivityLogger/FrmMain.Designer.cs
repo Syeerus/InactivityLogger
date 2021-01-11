@@ -48,6 +48,10 @@
             this.BtnStart = new System.Windows.Forms.Button();
             this.BtnStop = new System.Windows.Forms.Button();
             this.BtnClear = new System.Windows.Forms.Button();
+            this.NumUpDownIdlePeriod = new System.Windows.Forms.NumericUpDown();
+            this.LblIdlePeriod = new System.Windows.Forms.Label();
+            this.LblIdleMinutes = new System.Windows.Forms.Label();
+            ((System.ComponentModel.ISupportInitialize)(this.NumUpDownIdlePeriod)).BeginInit();
             this.SuspendLayout();
             // 
             // TxtLog
@@ -92,11 +96,48 @@
             this.BtnClear.UseVisualStyleBackColor = true;
             this.BtnClear.Click += new System.EventHandler(this.BtnClear_Click);
             // 
+            // NumUpDownIdlePeriod
+            // 
+            this.NumUpDownIdlePeriod.DecimalPlaces = 1;
+            this.NumUpDownIdlePeriod.Location = new System.Drawing.Point(259, 362);
+            this.NumUpDownIdlePeriod.Maximum = new decimal(new int[] {
+            999999999,
+            0,
+            0,
+            0});
+            this.NumUpDownIdlePeriod.Name = "NumUpDownIdlePeriod";
+            this.NumUpDownIdlePeriod.Size = new System.Drawing.Size(85, 20);
+            this.NumUpDownIdlePeriod.TabIndex = 4;
+            this.NumUpDownIdlePeriod.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.NumUpDownIdlePeriod.ThousandsSeparator = true;
+            this.NumUpDownIdlePeriod.ValueChanged += new System.EventHandler(this.NumUpDownIdlePeriod_ValueChanged);
+            // 
+            // LblIdlePeriod
+            // 
+            this.LblIdlePeriod.AutoSize = true;
+            this.LblIdlePeriod.Location = new System.Drawing.Point(197, 364);
+            this.LblIdlePeriod.Name = "LblIdlePeriod";
+            this.LblIdlePeriod.Size = new System.Drawing.Size(60, 13);
+            this.LblIdlePeriod.TabIndex = 5;
+            this.LblIdlePeriod.Text = "Idle Period:";
+            // 
+            // LblIdleMinutes
+            // 
+            this.LblIdleMinutes.AutoSize = true;
+            this.LblIdleMinutes.Location = new System.Drawing.Point(350, 364);
+            this.LblIdleMinutes.Name = "LblIdleMinutes";
+            this.LblIdleMinutes.Size = new System.Drawing.Size(44, 13);
+            this.LblIdleMinutes.TabIndex = 6;
+            this.LblIdleMinutes.Text = "Minutes";
+            // 
             // FrmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(537, 461);
+            this.ClientSize = new System.Drawing.Size(537, 428);
+            this.Controls.Add(this.LblIdleMinutes);
+            this.Controls.Add(this.LblIdlePeriod);
+            this.Controls.Add(this.NumUpDownIdlePeriod);
             this.Controls.Add(this.BtnClear);
             this.Controls.Add(this.BtnStop);
             this.Controls.Add(this.BtnStart);
@@ -105,6 +146,7 @@
             this.Name = "FrmMain";
             this.Text = "Inactivity Logger";
             this.Load += new System.EventHandler(this.FrmMain_Load);
+            ((System.ComponentModel.ISupportInitialize)(this.NumUpDownIdlePeriod)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -116,6 +158,9 @@
         private System.Windows.Forms.Button BtnStart;
         private System.Windows.Forms.Button BtnStop;
         private System.Windows.Forms.Button BtnClear;
+        private System.Windows.Forms.NumericUpDown NumUpDownIdlePeriod;
+        private System.Windows.Forms.Label LblIdlePeriod;
+        private System.Windows.Forms.Label LblIdleMinutes;
     }
 }
 
