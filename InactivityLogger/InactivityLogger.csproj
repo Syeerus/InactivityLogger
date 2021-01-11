@@ -112,6 +112,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>robocopy "$(SolutionDir)doc" "$(ProjectDir)$(OutDir)doc" /PURGE &amp; \
-robocopy "$(SolutionDir)fonts" "$(ProjectDir)$(OutDir)fonts" /PURGE</PostBuildEvent>
+robocopy "$(SolutionDir)fonts" "$(ProjectDir)$(OutDir)fonts" /PURGE &amp; \
+copy "$(SolutionDir)LICENSE" "$(ProjectDir)$(OutDir)"</PostBuildEvent>
   </PropertyGroup>
 </Project>
