@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using System.Windows.Forms;
+using System.Drawing;
 
 namespace InactivityLogger
 {
@@ -63,6 +64,9 @@ namespace InactivityLogger
         // Set to true when the idle timer reaches its interval and false on input change.
         private bool isIdle = false;
 
+        // The previous size of FrmMain before resizing.
+        private Size prevFrmMainSize;
+
         public FrmMain(InputMonitor inputMonitor)
         {
             InitializeComponent();
@@ -77,6 +81,8 @@ namespace InactivityLogger
 
             IdleTimerIntervalInMinutes = DefaultIdleTimerIntervalInMinutes;
             idleTimer.Tick += OnIdleTimerTick;
+
+            prevFrmMainSize = this.Size;
         }
 
         // Adds a message to the log textbox.
@@ -204,6 +210,29 @@ namespace InactivityLogger
             {
                 IdleTimerIntervalInMinutes = NumUpDownIdlePeriod.Value;
             }
+        }
+
+        private void FrmMain_Resize(object sender, EventArgs e)
+        {
+            int widthDiff = this.Size.Width - prevFrmMainSize.Width;
+            int heightDiff = this.Size.Height - prevFrmMainSize.Height;
+
+            // TxtLog should resize with the right and bottom edges.
+            TxtLog.Width += widthDiff;
+            TxtLog.Height += heightDiff;
+
+            // BtnClear should follow the right and bottom edges.
+            BtnClear.Left += widthDiff;
+            BtnClear.Top += heightDiff;
+
+            // The rest of the controls should follow the bottom edge.
+            BtnStart.Top += heightDiff;
+            BtnStop.Top += heightDiff;
+            LblIdlePeriod.Top += heightDiff;
+            NumUpDownIdlePeriod.Top += heightDiff;
+            LblIdleMinutes.Top += heightDiff;
+
+            prevFrmMainSize = this.Size;
         }
     }
 }

@@ -56,8 +56,9 @@
             // 
             // TxtLog
             // 
+            this.TxtLog.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.TxtLog.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TxtLog.Location = new System.Drawing.Point(12, 12);
+            this.TxtLog.Location = new System.Drawing.Point(12, 15);
             this.TxtLog.Multiline = true;
             this.TxtLog.Name = "TxtLog";
             this.TxtLog.ReadOnly = true;
@@ -99,7 +100,7 @@
             // NumUpDownIdlePeriod
             // 
             this.NumUpDownIdlePeriod.DecimalPlaces = 1;
-            this.NumUpDownIdlePeriod.Location = new System.Drawing.Point(259, 362);
+            this.NumUpDownIdlePeriod.Location = new System.Drawing.Point(264, 362);
             this.NumUpDownIdlePeriod.Maximum = new decimal(new int[] {
             999999999,
             0,
@@ -115,7 +116,7 @@
             // LblIdlePeriod
             // 
             this.LblIdlePeriod.AutoSize = true;
-            this.LblIdlePeriod.Location = new System.Drawing.Point(197, 364);
+            this.LblIdlePeriod.Location = new System.Drawing.Point(202, 364);
             this.LblIdlePeriod.Name = "LblIdlePeriod";
             this.LblIdlePeriod.Size = new System.Drawing.Size(60, 13);
             this.LblIdlePeriod.TabIndex = 5;
@@ -124,7 +125,7 @@
             // LblIdleMinutes
             // 
             this.LblIdleMinutes.AutoSize = true;
-            this.LblIdleMinutes.Location = new System.Drawing.Point(350, 364);
+            this.LblIdleMinutes.Location = new System.Drawing.Point(355, 364);
             this.LblIdleMinutes.Name = "LblIdleMinutes";
             this.LblIdleMinutes.Size = new System.Drawing.Size(44, 13);
             this.LblIdleMinutes.TabIndex = 6;
@@ -143,9 +144,11 @@
             this.Controls.Add(this.BtnStart);
             this.Controls.Add(this.TxtLog);
             this.MaximizeBox = false;
+            this.MinimumSize = new System.Drawing.Size(553, 467);
             this.Name = "FrmMain";
             this.Text = "Inactivity Logger";
             this.Load += new System.EventHandler(this.FrmMain_Load);
+            this.Resize += new System.EventHandler(this.FrmMain_Resize);
             ((System.ComponentModel.ISupportInitialize)(this.NumUpDownIdlePeriod)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
