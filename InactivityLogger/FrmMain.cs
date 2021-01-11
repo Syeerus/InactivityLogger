@@ -118,7 +118,7 @@ namespace InactivityLogger
                 case EventType.IdlePeriodChanged:
                 {
                     typeName = "Config.Changed";
-                    extraData = String.Format("- Idle period changed to {0} minutes.", NumUpDownIdlePeriod.Value);
+                    extraData = String.Format("- Idle period changed to {0} {1}.", NumUpDownIdlePeriod.Value, (NumUpDownIdlePeriod.Value != 1M ? "minutes" : "minute"));
                     break;
                 }
             }
@@ -152,10 +152,17 @@ namespace InactivityLogger
         private string GetTimeSpanString(TimeSpan timeDiff)
         {
             string timeFormat = "";
+            string days = (timeDiff.Days != 1 ? "days" : "day");
+            string hours = (timeDiff.Hours != 1 ? "hours" : "hour");
+            string minutes = (timeDiff.Minutes != 1 ? "minutes" : "minute");
+            string seconds = (timeDiff.Seconds != 1 ? "seconds" : "second");
             object[] formatArgs;
             if (timeDiff.Days > 0)
             {
-                timeFormat = "{0} days, {1} hours, {2} minutes, {3} seconds";
+                timeFormat = "{0} " + days +
+                    ", {1} " + hours +
+                    ", {2} " + minutes +
+                    ", {3} " + seconds;
                 formatArgs = new object[]
                 {
                     timeDiff.Days,
@@ -166,7 +173,9 @@ namespace InactivityLogger
             }
             else if (timeDiff.Hours > 0)
             {
-                timeFormat = "{0} hours, {1} minutes, {2} seconds";
+                timeFormat = "{0} " + hours +
+                    ", {1} " + minutes +
+                    ", {2} " + seconds;
                 formatArgs = new object[]
                 {
                     timeDiff.Hours,
@@ -176,7 +185,7 @@ namespace InactivityLogger
             }
             else if (timeDiff.Minutes > 0)
             {
-                timeFormat = "{0} minutes, {1} seconds";
+                timeFormat = "{0} " + minutes + ", {1} " + seconds;
                 formatArgs = new object[]
                 {
                     timeDiff.Minutes,
@@ -185,7 +194,7 @@ namespace InactivityLogger
             }
             else
             {
-                timeFormat = "{0} seconds";
+                timeFormat = "{0} " + seconds;
                 formatArgs = new object[]
                 {
                     timeDiff.Seconds
