@@ -20,42 +20,6 @@ namespace InactivityLogger
         // Enligsh US formatting.
         private static readonly CultureInfo englishUSCultureInfo = new CultureInfo("en-US");
 
-        // Gets or sets the idle timer interval in minutes.
-        public decimal IdleTimerIntervalInMinutes
-        {
-            get
-            {
-                return idleTimerIntervalInMinutes;
-            }
-
-            set
-            {
-                int milliseconds = (int)Math.Round(value * oneMinuteInMilliseconds);
-                if (milliseconds < minIdleTimerInterval)
-                {
-                    // User supplied value is too low.
-                    milliseconds = minIdleTimerInterval;
-                    idleTimerIntervalInMinutes = (decimal)milliseconds / oneMinuteInMilliseconds;
-                }
-                else
-                {
-                    idleTimerIntervalInMinutes = value;
-                }
-
-                idleTimer.Interval = milliseconds;
-                if (idleTimer.Enabled)
-                {
-                    // Reset if enabled.
-                    ResetIdleTimer();
-                }
-
-                NumUpDownIdlePeriod.Value = idleTimerIntervalInMinutes;
-            }
-        }
-
-        // The display value for the idle timer interval.
-        private decimal idleTimerIntervalInMinutes = 0.0M;
-
         // Timer used for determining idleness.
         private Timer idleTimer = new Timer();
 
@@ -71,6 +35,9 @@ namespace InactivityLogger
         // The time the user began to idle.
         private DateTime idleStartTime;
 
+        // Change this to not add a message to the log for certain events.
+        private bool doNotAddToLog = false;
+
         public FrmMain(InputMonitor inputMonitor)
         {
             InitializeComponent();
@@ -83,7 +50,6 @@ namespace InactivityLogger
             BtnStart.Enabled = true;
             BtnStop.Enabled = false;
 
-            IdleTimerIntervalInMinutes = DefaultIdleTimerIntervalInMinutes;
             idleTimer.Tick += OnIdleTimerTick;
 
             prevFrmMainSize = this.Size;
@@ -92,6 +58,9 @@ namespace InactivityLogger
             EnableBtnSaveLog(false);
 
             TxtLog.Font = new Font(FontManager.Get("OpenSans-Regular"), 10.3f, FontStyle.Regular);
+
+            doNotAddToLog = true;
+            NumUpDownIdlePeriod.Value = DefaultIdleTimerIntervalInMinutes;
         }
 
         // Adds a message to the log textbox.
@@ -144,6 +113,12 @@ namespace InactivityLogger
                 case EventType.KeyDown:
                 {
                     typeName = "Keyboard.KeyDown";
+                    break;
+                }
+                case EventType.IdlePeriodSet:
+                {
+                    typeName = "Config.Changed";
+                    extraData = String.Format("- Idle period changed to {0} minutes.", NumUpDownIdlePeriod.Value);
                     break;
                 }
             }
@@ -291,9 +266,32 @@ namespace InactivityLogger
 
         private void NumUpDownIdlePeriod_ValueChanged(object sender, EventArgs e)
         {
-            if (NumUpDownIdlePeriod.Value != IdleTimerIntervalInMinutes)
+            int milliseconds = 0;
+            if (!int.TryParse(Math.Round(NumUpDownIdlePeriod.Value * oneMinuteInMilliseconds).ToString(), out milliseconds) ||
+                milliseconds < minIdleTimerInterval)
             {
-                IdleTimerIntervalInMinutes = NumUpDownIdlePeriod.Value;
+                // Couldn't parse the integer or it's too low.
+                milliseconds = minIdleTimerInterval;
+                NumUpDownIdlePeriod.Value = (decimal)milliseconds / oneMinuteInMilliseconds;
+                // Return because the above statement will raise another event.
+                return;
+            }
+
+            idleTimer.Interval = milliseconds;
+            if (idleTimer.Enabled)
+            {
+                // Reset if enabled.
+                ResetIdleTimer();
+            }
+
+            if (!doNotAddToLog)
+            {
+                AddToTxtLog(EventType.IdlePeriodSet);
+            }
+            else
+            {
+                // Reset.
+                doNotAddToLog = false;
             }
         }
 
