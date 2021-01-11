@@ -60,7 +60,7 @@ namespace InactivityLogger
             TxtLog.Font = new Font(FontManager.Get("OpenSans-Regular"), 10.0f, FontStyle.Regular);
 
             doNotAddToLog = true;
-            NumUpDownIdlePeriod.Value = DefaultIdleTimerIntervalInMinutes;
+            NumUpDownIdleInterval.Value = DefaultIdleTimerIntervalInMinutes;
         }
 
         // Adds a message to the log textbox.
@@ -115,10 +115,10 @@ namespace InactivityLogger
                     typeName = "Keyboard.KeyDown";
                     break;
                 }
-                case EventType.IdlePeriodChanged:
+                case EventType.IdleIntervalChanged:
                 {
                     typeName = "Config.Changed";
-                    extraData = String.Format("- Idle period changed to {0} {1}.", NumUpDownIdlePeriod.Value, (NumUpDownIdlePeriod.Value != 1M ? "minutes" : "minute"));
+                    extraData = String.Format("- Idle interval changed to {0} {1}.", NumUpDownIdleInterval.Value, (NumUpDownIdleInterval.Value != 1M ? "minutes" : "minute"));
                     break;
                 }
             }
@@ -276,12 +276,12 @@ namespace InactivityLogger
         private void NumUpDownIdlePeriod_ValueChanged(object sender, EventArgs e)
         {
             int milliseconds = 0;
-            if (!int.TryParse(Math.Round(NumUpDownIdlePeriod.Value * oneMinuteInMilliseconds).ToString(), out milliseconds) ||
+            if (!int.TryParse(Math.Round(NumUpDownIdleInterval.Value * oneMinuteInMilliseconds).ToString(), out milliseconds) ||
                 milliseconds < minIdleTimerInterval)
             {
                 // Couldn't parse the integer or it's too low.
                 milliseconds = minIdleTimerInterval;
-                NumUpDownIdlePeriod.Value = (decimal)milliseconds / oneMinuteInMilliseconds;
+                NumUpDownIdleInterval.Value = (decimal)milliseconds / oneMinuteInMilliseconds;
                 // Return because the above statement will raise another event.
                 return;
             }
@@ -295,7 +295,7 @@ namespace InactivityLogger
 
             if (!doNotAddToLog)
             {
-                AddToTxtLog(EventType.IdlePeriodChanged);
+                AddToTxtLog(EventType.IdleIntervalChanged);
             }
             else
             {
@@ -324,9 +324,9 @@ namespace InactivityLogger
             // The rest of the controls should follow the bottom edge.
             BtnStart.Top += heightDiff;
             BtnStop.Top += heightDiff;
-            LblIdlePeriod.Top += heightDiff;
-            NumUpDownIdlePeriod.Top += heightDiff;
-            LblIdleMinutes.Top += heightDiff;
+            LblGoIdleAfter.Top += heightDiff;
+            NumUpDownIdleInterval.Top += heightDiff;
+            LblMinutes.Top += heightDiff;
 
             ResumeLayout();
 

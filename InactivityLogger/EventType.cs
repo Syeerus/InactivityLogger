@@ -15,6 +15,6 @@ namespace InactivityLogger
         MouseHorizontalWheel,
         KeyDown,
         WentIdle,
-        IdlePeriodChanged
+        IdleIntervalChanged
     }
 }
